@@ -5,7 +5,7 @@ window.onload = function () {
 };
 
 //Google User
-function onSignIn(googleUser) {
+// function onSignIn(googleUser) {
   if (window.location.pathname == "/login") {
     console.log(window.location.pathname);
     $.ajax({
@@ -20,21 +20,28 @@ function onSignIn(googleUser) {
     });
   }
   if (window.location.pathname != "/login") {
-    var profile = googleUser.getBasicProfile();
-    console.log("test");
-    var user_student = {
-      id_gg: profile.getId(),
-      name: profile.getName(),
-      email: profile.getEmail(),
-    };
-    console.log(user_student);
+    // var profile = googleUser.getBasicProfile();
+    // console.log("test");
+    // var user_student = {
+    //   id_gg: profile.getId(),
+    //   name: profile.getName(),
+    //   email: profile.getEmail(),
+    // };
+    // console.log(user_student);
 
     const socket = io("/");
     const videoGrid = document.getElementById("video-grid");
     const peers = {};
-    const myPeer = new Peer(undefined, {
-      host: "/",
-      port: "3001",
+    // const myPeer = new Peer(undefined, {
+    //   host: "/",
+    //   port: "3001",
+    // });
+    
+    const myPeer = new Peer({
+      key: "peerjs",
+      port: "https://mypeers17050211.herokuapp.com",
+      secure: true,
+      port: 443
     });
     const myVideo = document.createElement("video");
     myVideo.muted = true;
@@ -96,7 +103,7 @@ function onSignIn(googleUser) {
       peers[userId] = call;
     }
   }
-}
+// }
 
 //Google signOut
 function signOut() {

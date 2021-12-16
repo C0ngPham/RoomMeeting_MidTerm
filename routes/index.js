@@ -29,9 +29,9 @@ router.get("/", (req, res) => {
   res.redirect(`/${uuidV4()}`);
 });
 router.get("/:room", (req, res) => {
-  if (!req.session.user) {
-    res.redirect("/login");
-  }
+  // if (!req.session.user) {
+  //   res.redirect("/login");
+  // }
   res.render("room", { roomId: req.params.room });
 });
 
