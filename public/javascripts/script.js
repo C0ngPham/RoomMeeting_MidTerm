@@ -36,7 +36,7 @@ window.onload = function () {
     //   host: "/",
     //   port: "3001",
     // });
-    
+
     const myPeer = new Peer({
       key: "peerjs",
       port: "https://mypeers17050211.herokuapp.com",
@@ -49,7 +49,7 @@ window.onload = function () {
     navigator.mediaDevices
       .getUserMedia({
         video: true,
-        audio: false,
+        audio: true,
       })
       .then((stream) => {
         addVideoStream(myVideo, stream);
