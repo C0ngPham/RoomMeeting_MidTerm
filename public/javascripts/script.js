@@ -1,3 +1,9 @@
+window.onload = function () {
+  gapi.load("auth2", function () {
+    gapi.auth2.init();
+  });
+};
+
 //Google User
 function onSignIn(googleUser) {
   if (window.location.pathname == "/login") {
