@@ -28,12 +28,14 @@ router.get("/logout", function (req, res, next) {
   res.redirect("/login");
 });
 
+
 router.get("/room", (req, res) => {
   if (!req.session.user) {
     res.redirect("/login");
   }  
   res.redirect(`/room/${uuidV4()}`);
 });
+
 
 router.get("/room/:room", (req, res) => {
   if (!req.session.user) {
