@@ -9,6 +9,8 @@
     <meta name="google-signin-client_id" content="184293983150-lmr30b68boccjlti25h6vci26gbsrans.apps.googleusercontent.com">
 
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     {{!-- Bootstrap CSs --}}
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -19,18 +21,45 @@
       integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
     {{!-- Login & Peer --}}
     <script defer src="https://unpkg.com/peerjs@1.3.1/dist/peerjs.min.js"></script>
     <script src="http://localhost:3000/socket.io/socket.io.js" defer></script>
     <script src="https://apis.google.com/js/platform.js" async defer></script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8c55_YHLvDHGACkQscgbGLtLRdxBDCfI"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    {{!-- project main script and CSS --}}
+    {{!-- project main script --}}
     <script src="/javascripts/script.js" defer></script>
   
   </head>
   
   <body>
+    <div hidden class="g-signin2" data-onsuccess="onSignIn"></div>
+    <div id='mainNavbar'>
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01"
+          aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+          <a class="navbar-brand" href="/">Home</a>
+        </div>
+    
+    
+        <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+          <span class="navbar-text" id='usnam'></span>
+        </div>
+        <div class="collapse navbar-collapse" id="roomItem">
+          Room code: {{roomId}}<span class="navbar-text" id='roomCode'></span>
+        </div>
+        <a href="/"><button type="button" class="btn btn-outline-danger" id="roomItem2" onclick="/">
+            Leave Room
+          </button>
+        </a>
+    
+        <button type="button" onclick="signOut()" class="btn "> Log Out <i class="fa fa-power-off"></i></button>
+      </nav>
+    </div>
     {{{body}}}
   </body>
 </html>

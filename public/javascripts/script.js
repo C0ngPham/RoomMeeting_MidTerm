@@ -3,12 +3,15 @@ window.onload = function () {
     gapi.auth2.init();
   });
 };
+window.addEventListener("load", () => {});
 
-
+document.getElementById("mainNavbar").style.visibility = "hidden";
+// document.getElementById("roomItem").style.visibility = "hidden";
 //Google User
 function onSignIn(googleUser) {
   if (window.location.pathname == "/login") {
     console.log(window.location.pathname);
+
     $.ajax({
       url: "/login",
       method: "post",
@@ -21,6 +24,10 @@ function onSignIn(googleUser) {
     });
   }
   if (window.location.pathname == "/") {
+    document.getElementById("mainNavbar").style.visibility = "";
+    document.getElementById("roomItem").style.visibility = "hidden";
+    document.getElementById("roomItem2").style.visibility = "hidden";
+    document.getElementById("usnam").innerText = user_student.name;
     var profile = googleUser.getBasicProfile();
     console.log("test");
     var user_student = {
@@ -31,10 +38,10 @@ function onSignIn(googleUser) {
     console.log(user_student);
 
     // Set username
-    document.getElementById("usnam").innerText = user_student.name;
   }
 
   if (window.location.pathname.includes("/room")) {
+    document.getElementById("mainNavbar").style.visibility = "";
     //Get Room ID
     const ROOM_ID = $("#room_id").text();
     console.log(ROOM_ID);
@@ -52,6 +59,7 @@ function onSignIn(googleUser) {
     document.getElementById("usnam").innerText = user_student.name;
     const socket = io("/");
     const videoGrid = document.getElementById("video-grid");
+    const myVideoGrid = document.getElementById("my-video");
     const peers = {};
     // const myPeer = new Peer(undefined, {
     //   host: "/",
@@ -80,7 +88,7 @@ function onSignIn(googleUser) {
       })
       .then((stream) => {
         myStream = stream;
-        addVideoStream(myVideo, stream);
+        addMyVideoStream(myVideo, stream);
 
         myPeer.on("call", (call) => {
           call.answer(stream);
@@ -111,6 +119,13 @@ function onSignIn(googleUser) {
     myPeer.on("open", (id) => {
       socket.emit("join-room", ROOM_ID, id);
     });
+    function addMyVideoStream(video, stream) {
+      video.srcObject = stream;
+      video.addEventListener("loadedmetadata", () => {
+        video.play();
+      });
+      myVideoGrid.append(video);
+    }
 
     function addVideoStream(video, stream) {
       video.srcObject = stream;

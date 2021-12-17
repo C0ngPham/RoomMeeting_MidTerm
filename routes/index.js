@@ -42,4 +42,12 @@ router.get("/room/:room", (req, res) => {
   res.render("room", { roomId: req.params.room });
 });
 
+
+router.post("/enter", (req, res) => {
+  // console.log(req.body.roomcode);
+  let room = "room/";
+  res.redirect(room.concat(req.body.roomcode));
+});
+
+
 module.exports = router;
