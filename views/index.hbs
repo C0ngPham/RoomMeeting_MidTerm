@@ -7,6 +7,7 @@
         <a class="navbar-brand" href="/">Home</a>
     </div><button type="button" onclick="signOut()" class="btn btn-danger">Log Out</button>
 </nav>
+<div hidden class="g-signin2" data-onsuccess="onSignIn"></div>
 <div class="body">
 <h1>{{title}}</h1>
 <p>Welcome <span id='usnam'></span> to Room Meeting</p>
@@ -21,7 +22,7 @@
 
 <form>
     <div class="form-group">
-        <input type="email" class="form-control" id="roomcode" placeholder="Enter a room code">
+        <input type="text" class="form-control" id="roomcode" placeholder="Enter a room code">
     </div>
 
     <button type="submit" class="btn btn-primary">Enter Room</button>

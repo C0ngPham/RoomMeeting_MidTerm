@@ -20,12 +20,25 @@ function onSignIn(googleUser) {
       },
     });
   }
-  if (window.location.pathname != "/login") {
+  if (window.location.pathname == "/") {
+    var profile = googleUser.getBasicProfile();
+    console.log("test");
+    var user_student = {
+      id_gg: profile.getId(),
+      name: profile.getName(),
+      email: profile.getEmail(),
+    };
+    console.log(user_student);
 
+    // Set username
+    document.getElementById("usnam").innerText = user_student.name;
+  }
+
+  if (window.location.pathname.includes("/room")) {
     //Get Room ID
-    const ROOM_ID = $('#room_id').text()
-    console.log(ROOM_ID)    
-    
+    const ROOM_ID = $("#room_id").text();
+    console.log(ROOM_ID);
+
     var profile = googleUser.getBasicProfile();
     var user_student = {
       id_gg: profile.getId(),
@@ -51,7 +64,7 @@ function onSignIn(googleUser) {
       key: "peerjs",
       port: "https://mypeers17050211.herokuapp.com",
       secure: true,
-      port: 443
+      port: 443,
     });
     const myVideo = document.createElement("video");
     myVideo.muted = true;
@@ -59,8 +72,8 @@ function onSignIn(googleUser) {
     var currentPeer;
     var myStream;
     var myShareScreen;
-    var initiateBtn = document.getElementById('initiateBtn');
-    var stopBtn = document.getElementById('stopBtn');
+    var initiateBtn = document.getElementById("initiateBtn");
+    var stopBtn = document.getElementById("stopBtn");
 
     navigator.mediaDevices
       .getUserMedia({
@@ -75,7 +88,7 @@ function onSignIn(googleUser) {
           const video = document.createElement("video");
           call.on("stream", (userVideoStream) => {
             currentPeer = call.peerConnection;
-            initiateBtn.style.display = 'block';         
+            initiateBtn.style.display = "block";
             addVideoStream(video, userVideoStream);
           });
           call.on("close", () => {
@@ -110,7 +123,7 @@ function onSignIn(googleUser) {
         $("#name" + userId).remove();
         console.log("close real")
       }
-      initiateBtn.style.display = 'none';
+      initiateBtn.style.display = "none";
       //alert('User disconnected: ', userId);
       console.log("User disconnected: ", userId);
     });
@@ -137,7 +150,7 @@ function onSignIn(googleUser) {
       const video = document.createElement("video");
       call.on("stream", (userVideoStream) => {
         currentPeer = call.peerConnection;
-        initiateBtn.style.display = 'block';
+        initiateBtn.style.display = "block";
         addVideoStream(video, userVideoStream);
       });
       call.on("close", () => {
@@ -149,56 +162,58 @@ function onSignIn(googleUser) {
     }
 
     initiateBtn.onclick = (e) => {
-      if(currentPeer) {
-        navigator.mediaDevices.getDisplayMedia({
-          video: {
-            cursor: 'always'
-          },
-          audio: {
-            echoCancellation: true,
-            noiseSuppression: true
-          }
-        }).then((stream) => {
-          myShareScreen = stream;
-  
-          let vidtrack = myShareScreen.getVideoTracks()[0];
-          vidtrack.onended = function() {
-            stopShare();
-          };
-          let sender = currentPeer.getSenders().find(function(s) {
-            return s.track.kind == vidtrack.kind;
+      if (currentPeer) {
+        navigator.mediaDevices
+          .getDisplayMedia({
+            video: {
+              cursor: "always",
+            },
+            audio: {
+              echoCancellation: true,
+              noiseSuppression: true,
+            },
           })
-          sender.replaceTrack(vidtrack);
-  
-          // var video = document.querySelector('video');
-          // if ('srcObject' in video) {
-          //   video.srcObject = stream;
-          // } else {
-          //   video.src = window.URL.createObjectURL(stream); // for older browsers
-          // }
-          // video.play();
-  
-          stopBtn.style.display = 'block';
-        }).catch((err) => {
-          console.log('Get display media got Error: ', err);
-        })
+          .then((stream) => {
+            myShareScreen = stream;
+
+            let vidtrack = myShareScreen.getVideoTracks()[0];
+            vidtrack.onended = function () {
+              stopShare();
+            };
+            let sender = currentPeer.getSenders().find(function (s) {
+              return s.track.kind == vidtrack.kind;
+            });
+            sender.replaceTrack(vidtrack);
+
+            // var video = document.querySelector('video');
+            // if ('srcObject' in video) {
+            //   video.srcObject = stream;
+            // } else {
+            //   video.src = window.URL.createObjectURL(stream); // for older browsers
+            // }
+            // video.play();
+
+            stopBtn.style.display = "block";
+          })
+          .catch((err) => {
+            console.log("Get display media got Error: ", err);
+          });
       }
-    }
+    };
 
     stopBtn.onclick = () => {
       myShareScreen.getVideoTracks()[0].stop();
       stopShare();
-    }
+    };
 
     function stopShare() {
       let vidtrack = myStream.getVideoTracks()[0];
-      let sender = currentPeer.getSenders().find(function(s) {
+      let sender = currentPeer.getSenders().find(function (s) {
         return s.track.kind == vidtrack.kind;
-      })
+      });
       sender.replaceTrack(vidtrack);
-      stopBtn.style.display = 'none';
+      stopBtn.style.display = "none";
     }
-
   }
 }
 
