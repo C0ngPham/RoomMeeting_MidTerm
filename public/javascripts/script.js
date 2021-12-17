@@ -86,7 +86,7 @@ function onSignIn(googleUser) {
     navigator.mediaDevices
       .getUserMedia({
         video: true,
-        audio: true,
+        audio: false,
       })
       .then((stream) => {
         myStream = stream;
