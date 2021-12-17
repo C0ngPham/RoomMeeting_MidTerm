@@ -6,14 +6,14 @@ const { v4: uuidV4 } = require("uuid");
 // /* GET home page. */
 router.get("/", function (req, res, next) {
   if (!req.session.user) {
-    res.redirect("/login");
+    return res.redirect("/login");
   }
   res.render("index", { title: "Home" });
 });
 
 router.get("/login", function (req, res, next) {
   if (req.session.user) {
-    res.redirect("/");
+    return res.redirect("/");
   }
   res.render("login");
 });
