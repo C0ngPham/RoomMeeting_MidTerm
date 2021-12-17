@@ -47,7 +47,6 @@ function onSignIn(googleUser) {
     console.log(ROOM_ID);
 
     var profile = googleUser.getBasicProfile();
-    console.log("test");
     var user_student = {
       id_gg: profile.getId(),
       name: profile.getName(),
@@ -60,7 +59,10 @@ function onSignIn(googleUser) {
     const socket = io("/");
     const videoGrid = document.getElementById("video-grid");
     const myVideoGrid = document.getElementById("my-video");
+    const nameGrid = document.getElementById("name-grid");
     const peers = {};
+    let list_username = {};
+
     // const myPeer = new Peer(undefined, {
     //   host: "/",
     //   port: "3001",
@@ -68,7 +70,7 @@ function onSignIn(googleUser) {
 
     const myPeer = new Peer({
       key: "peerjs",
-      port: "https://mypeers17050211.herokuapp.com",
+      host: "mypeers17050211.herokuapp.com",
       secure: true,
       port: 443,
     });
@@ -98,18 +100,29 @@ function onSignIn(googleUser) {
             initiateBtn.style.display = "block";
             addVideoStream(video, userVideoStream);
           });
+          const p_name = document.createElement("P");
+          p_name.setAttribute("id", "name" + call.peer);
+          p_name.innerText = list_username[call.peer];
+          nameGrid.append(p_name);
+          peers[call.peer] = call;
+          console.log(call.peer);
         });
 
-        socket.on("user-connected", (userId) => {
+        socket.on("user-connected", (userId, name) => {
+          const p_name = document.createElement("P");
+          p_name.setAttribute("id", "name" + userId);
+          p_name.innerText = list_username[userId];
+          nameGrid.append(p_name);
           connecttoNewUser(userId, stream);
-          //alert("new User " + userId)
-          console.log("User connected " + userId);
+          console.log("User connected " + userId, name);
         });
       });
 
     socket.on("user-disconnected", (userId) => {
       if (peers[userId]) {
         peers[userId].close();
+        $("#name" + userId).remove();
+        console.log("close real");
       }
       initiateBtn.style.display = "none";
       //alert('User disconnected: ', userId);
@@ -117,7 +130,11 @@ function onSignIn(googleUser) {
     });
 
     myPeer.on("open", (id) => {
-      socket.emit("join-room", ROOM_ID, id);
+      socket.emit("join-room", ROOM_ID, id, user_student.name);
+      socket.on("list-name", (list_name) => {
+        list_username = list_name;
+        console.log(list_username);
+      });
     });
     function addMyVideoStream(video, stream) {
       video.srcObject = stream;
@@ -148,6 +165,7 @@ function onSignIn(googleUser) {
       });
 
       peers[userId] = call;
+      console.log(peers);
     }
 
     initiateBtn.onclick = (e) => {

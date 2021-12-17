@@ -48,14 +48,21 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
-
+var list_name = {};
 io.on("connection", (socket) => {
-  socket.on("join-room", (roomId, userId) => {
-    console.log(roomId + '123', userId);
+  socket.on("join-room", (roomId, userId, name) => {
+
+    list_name[userId] = name
+    console.log(list_name);
+
     socket.join(roomId);
-    socket.to(roomId).emit("user-connected", userId);
+    io.emit("list-name", list_name);
+
+    socket.to(roomId).emit("user-connected", userId, name);
+    
     socket.on("disconnect", () => {
       socket.to(roomId).emit("user-disconnected", userId);
+      delete list_name[userId];
     });
   });
 });

@@ -1,19 +1,25 @@
 <div class="row no-gutters">
   <div class="col-12 col-sm-6 col-md-8">
     <div id="video-grid"> </div>
-  </div>
-  <div class="col-6 col-md-4">
-    <div id="my-video"></div>
-    <div style="padding-left: 10px;">
-      <button type="button" class="btn btn-light" id="initiateBtn" style="display:none"><i class="fas fa-random"></i>
-        Share Screen</button>
-      <button type="button" class="btn btn-light" id="stopBtn" style="display:none">Stop Sharing</button>
-      <button type="button" class="btn btn-outline-warning" id="muteBtn">Mute/Unmute</button>
-      <button type="button" class="btn btn-outline-dark" id="camBtn">Camera On/Off</button>
-      
-    
+
+
+    {{!-- <video autoplay></video><br/> --}}
+    <P id="room_id" hidden>{{roomId}}</P>
+    <div id="name-grid">
+      <span id='usnam'></span>
     </div>
+    <div id="video-grid">
+    </div>
+    <div class="col-6 col-md-4">
+      <div id="my-video"></div>
+      <div style="padding-left: 10px;">
+        <button type="button" class="btn btn-light" id="initiateBtn" style="display:none"><i class="fas fa-random"></i>
+          Share Screen</button>
+        <button type="button" class="btn btn-light" id="stopBtn" style="display:none">Stop Sharing</button>
+        <button type="button" class="btn btn-outline-warning" id="muteBtn">Mute/Unmute</button>
+        <button type="button" class="btn btn-outline-dark" id="camBtn">Camera On/Off</button>
+
+
+      </div>
     </div>
     <P id="room_id" hidden>{{roomId}}</P>
-    
-    
