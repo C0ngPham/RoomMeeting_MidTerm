@@ -51,6 +51,7 @@ function onSignIn(googleUser) {
 
     var currentPeer;
     var myStream;
+    var myShareScreen;
     var initiateBtn = document.getElementById('initiateBtn');
     var stopBtn = document.getElementById('stopBtn');
 
@@ -68,7 +69,7 @@ function onSignIn(googleUser) {
           const video = document.createElement("video");
           call.on("stream", (userVideoStream) => {
             currentPeer = call.peerConnection;
-            console.log('ccpeer: ', currentPeer);
+            initiateBtn.style.display = 'block';
             addVideoStream(video, userVideoStream);
           });
         });
@@ -84,7 +85,7 @@ function onSignIn(googleUser) {
       if (peers[userId]) {
         peers[userId].close();
       }
-
+      initiateBtn.style.display = 'none';
       //alert('User disconnected: ', userId);
       console.log("User disconnected: ", userId);
     });
@@ -106,6 +107,7 @@ function onSignIn(googleUser) {
       const video = document.createElement("video");
       call.on("stream", (userVideoStream) => {
         currentPeer = call.peerConnection;
+        initiateBtn.style.display = 'block';
         addVideoStream(video, userVideoStream);
       });
       call.on("close", () => {
@@ -116,35 +118,45 @@ function onSignIn(googleUser) {
     }
 
     initiateBtn.onclick = (e) => {
-      navigator.mediaDevices.getDisplayMedia({
-        video: {
-          cursor: 'always'
-        },
-        audio: {
-          echoCancellation: true,
-          noiseSuppression: true
-        }
-      }).then((stream) => {
-        let vidtrack = stream.getVideoTracks()[0];
-        vidtrack.onended = function() {
-          stopShare();
-        };
-        let sender = currentPeer.getSenders().find(function(s) {
-          return s.track.kind == vidtrack.kind;
+      if(currentPeer) {
+        navigator.mediaDevices.getDisplayMedia({
+          video: {
+            cursor: 'always'
+          },
+          audio: {
+            echoCancellation: true,
+            noiseSuppression: true
+          }
+        }).then((stream) => {
+          myShareScreen = stream;
+  
+          let vidtrack = myShareScreen.getVideoTracks()[0];
+          vidtrack.onended = function() {
+            stopShare();
+          };
+          let sender = currentPeer.getSenders().find(function(s) {
+            return s.track.kind == vidtrack.kind;
+          })
+          sender.replaceTrack(vidtrack);
+  
+          // var video = document.querySelector('video');
+          // if ('srcObject' in video) {
+          //   video.srcObject = stream;
+          // } else {
+          //   video.src = window.URL.createObjectURL(stream); // for older browsers
+          // }
+          // video.play();
+  
+          stopBtn.style.display = 'block';
+        }).catch((err) => {
+          console.log('Get display media got Error: ', err);
         })
-        sender.replaceTrack(vidtrack);
+      }
+    }
 
-        // var video = document.querySelector('video');
-        // if ('srcObject' in video) {
-        //   video.srcObject = stream;
-        // } else {
-        //   video.src = window.URL.createObjectURL(stream); // for older browsers
-        // }
-        // video.play();
-      }).catch((err) => {
-        console.log('Get display media got Error: ', err);
-      })
-      // stopBtn.style.display = 'block';
+    stopBtn.onclick = () => {
+      myShareScreen.getVideoTracks()[0].stop();
+      stopShare();
     }
 
     function stopShare() {
@@ -153,6 +165,7 @@ function onSignIn(googleUser) {
         return s.track.kind == vidtrack.kind;
       })
       sender.replaceTrack(vidtrack);
+      stopBtn.style.display = 'none';
     }
 
   }
