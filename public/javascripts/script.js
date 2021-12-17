@@ -62,7 +62,7 @@ function onSignIn(googleUser) {
 
     const myPeer = new Peer({
       key: "peerjs",
-      host: "https://mypeers17050211.herokuapp.com",
+      host: "mypeers17050211.herokuapp.com",
       secure: true,
       port: 443,
     });
