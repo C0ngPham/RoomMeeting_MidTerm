@@ -5,6 +5,9 @@ const { v4: uuidV4 } = require("uuid");
 
 // /* GET home page. */
 router.get("/", function (req, res, next) {
+  if (!req.session.user) {
+    res.redirect("/login");
+  }
   res.render("index", { title: "Home" });
 });
 
@@ -26,6 +29,9 @@ router.get("/logout", function (req, res, next) {
 });
 
 router.get("/room", (req, res) => {
+  if (!req.session.user) {
+    res.redirect("/login");
+  }
   res.redirect(`/room/${uuidV4()}`);
 });
 router.get("/room/:room", (req, res) => {

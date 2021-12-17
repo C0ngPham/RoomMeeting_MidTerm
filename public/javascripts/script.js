@@ -19,7 +19,21 @@ function onSignIn(googleUser) {
       },
     });
   }
-  if (window.location.pathname != "/login") {
+  if (window.location.pathname == "/") {
+    var profile = googleUser.getBasicProfile();
+    console.log("test");
+    var user_student = {
+      id_gg: profile.getId(),
+      name: profile.getName(),
+      email: profile.getEmail(),
+    };
+    console.log(user_student);
+
+    // Set username
+    document.getElementById("usnam").innerText = user_student.name;
+  }
+
+  if (window.location.pathname.includes("/room")) {
     var profile = googleUser.getBasicProfile();
     console.log("test");
     var user_student = {
@@ -44,7 +58,7 @@ function onSignIn(googleUser) {
       key: "peerjs",
       port: "https://mypeers17050211.herokuapp.com",
       secure: true,
-      port: 443
+      port: 443,
     });
     const myVideo = document.createElement("video");
     myVideo.muted = true;
