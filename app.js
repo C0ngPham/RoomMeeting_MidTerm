@@ -51,7 +51,7 @@ app.use(function(err, req, res, next) {
 
 io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId) => {
-    console.log(roomId, userId);
+    console.log(roomId + '123', userId);
     socket.join(roomId);
     socket.to(roomId).emit("user-connected", userId);
     socket.on("disconnect", () => {

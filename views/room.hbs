@@ -1,8 +1,5 @@
 
 <head>
-  <script>
-    const ROOM_ID = "<%= roomId %>"
-  </script>
   <style>
     #video-grid {
       display: grid;
@@ -20,9 +17,13 @@
 </head>
 
 <body>
+  {{!-- <video autoplay></video><br/> --}}
+  <P id="room_id" hidden>{{roomId}}</P>
   <span id='usnam'></span>
   <div id="video-grid">
   </div>
   <div hidden class="g-signin2" data-onsuccess="onSignIn"></div>
   <button type="button" onclick="signOut()"></i> Log Out</button>
+  <button id="initiateBtn" style="display:none">Start Sharing</button>
+  <button id="stopBtn" style="display:none">Stop Sharing</button>
 </body>

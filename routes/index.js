@@ -1,4 +1,4 @@
-var express = require('express');
+var express = require("express");
 var router = express.Router();
 
 const { v4: uuidV4 } = require("uuid");
@@ -6,14 +6,14 @@ const { v4: uuidV4 } = require("uuid");
 // /* GET home page. */
 router.get("/", function (req, res, next) {
   if (!req.session.user) {
-    res.redirect("/login");
+    return res.redirect("/login");
   }
   res.render("index", { title: "Home" });
 });
 
 router.get("/login", function (req, res, next) {
   if (req.session.user) {
-    res.redirect("/");
+    return res.redirect("/");
   }
   res.render("login");
 });
@@ -34,13 +34,12 @@ router.get("/room", (req, res) => {
   }
   res.redirect(`/room/${uuidV4()}`);
 });
+
 router.get("/room/:room", (req, res) => {
   if (!req.session.user) {
     res.redirect("/login");
   }
   res.render("room", { roomId: req.params.room });
 });
-
-
 
 module.exports = router;
