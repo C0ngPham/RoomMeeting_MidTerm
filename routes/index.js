@@ -4,9 +4,9 @@ var router = express.Router();
 const { v4: uuidV4 } = require("uuid");
 
 // /* GET home page. */
-// router.get('/', function(req, res, next) {
-//   res.render('index', { title: 'Express' });
-// });
+router.get("/", function (req, res, next) {
+  res.render("index", { title: "Home" });
+});
 
 router.get("/login", function (req, res, next) {
   if (req.session.user) {
@@ -25,10 +25,10 @@ router.get("/logout", function (req, res, next) {
   res.redirect("/login");
 });
 
-router.get("/", (req, res) => {
-  res.redirect(`/${uuidV4()}`);
+router.get("/room", (req, res) => {
+  res.redirect(`/room/${uuidV4()}`);
 });
-router.get("/:room", (req, res) => {
+router.get("/room/:room", (req, res) => {
   if (!req.session.user) {
     res.redirect("/login");
   }

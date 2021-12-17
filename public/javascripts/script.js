@@ -29,12 +29,22 @@ function onSignIn(googleUser) {
     };
     console.log(user_student);
 
+    // Set username
+    document.getElementById("usnam").innerText = user_student.name;
+
     const socket = io("/");
     const videoGrid = document.getElementById("video-grid");
     const peers = {};
-    const myPeer = new Peer(undefined, {
-      host: "/",
-      port: "3001",
+    // const myPeer = new Peer(undefined, {
+    //   host: "/",
+    //   port: "3001",
+    // });
+
+    const myPeer = new Peer({
+      key: "peerjs",
+      port: "https://mypeers17050211.herokuapp.com",
+      secure: true,
+      port: 443
     });
     const myVideo = document.createElement("video");
     myVideo.muted = true;
@@ -47,12 +57,12 @@ function onSignIn(googleUser) {
     navigator.mediaDevices
       .getUserMedia({
         video: true,
-        audio: false,
+        audio: true,
       })
       .then((stream) => {
         myStream = stream;
         addVideoStream(myVideo, stream);
-        
+
         myPeer.on("call", (call) => {
           call.answer(stream);
           const video = document.createElement("video");
@@ -157,4 +167,9 @@ function signOut() {
       console.log("Sign Out");
       window.location.replace("/logout");
     });
+}
+
+//Create new room meeting
+function creatRoom() {
+  window.location.replace("/room/");
 }
