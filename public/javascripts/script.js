@@ -4,6 +4,7 @@ window.onload = function () {
   });
 };
 
+
 //Google User
 function onSignIn(googleUser) {
   if (window.location.pathname == "/login") {
@@ -20,6 +21,11 @@ function onSignIn(googleUser) {
     });
   }
   if (window.location.pathname != "/login") {
+
+    //Get Room ID
+    const ROOM_ID = $('#room_id').text()
+    console.log(ROOM_ID)    
+    
     var profile = googleUser.getBasicProfile();
     console.log("test");
     var user_student = {
@@ -31,7 +37,6 @@ function onSignIn(googleUser) {
 
     // Set username
     document.getElementById("usnam").innerText = user_student.name;
-
     const socket = io("/");
     const videoGrid = document.getElementById("video-grid");
     const peers = {};

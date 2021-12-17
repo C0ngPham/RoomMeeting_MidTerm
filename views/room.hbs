@@ -1,8 +1,5 @@
 
 <head>
-  <script>
-    const ROOM_ID = "<%= roomId %>"
-  </script>
   <style>
     #video-grid {
       display: grid;
@@ -21,6 +18,7 @@
 
 <body>
   {{!-- <video autoplay></video><br/> --}}
+  <P id="room_id" hidden>{{roomId}}</P>
   <span id='usnam'></span>
   <div id="video-grid">
   </div>
