@@ -5,7 +5,7 @@ window.onload = function () {
 };
 
 //Google User
-// function onSignIn(googleUser) {
+function onSignIn(googleUser) {
   if (window.location.pathname == "/login") {
     console.log(window.location.pathname);
     $.ajax({
@@ -103,7 +103,7 @@ window.onload = function () {
       peers[userId] = call;
     }
   }
-// }
+}
 
 //Google signOut
 function signOut() {
