@@ -100,6 +100,9 @@ function onSignIn(googleUser) {
             initiateBtn.style.display = "block";
             addVideoStream(video, userVideoStream);
           });
+          call.on("close", () => {
+            video.remove();
+          });          
           const p_name = document.createElement("P");
           p_name.setAttribute("id", "name" + call.peer);
           p_name.innerText = list_username[call.peer];
