@@ -1,3 +1,9 @@
+window.onload = function () {
+  gapi.load("auth2", function () {
+    gapi.auth2.init();
+  });
+};
+
 //Google User
 function onSignIn(googleUser) {
   if (window.location.pathname == "/login") {
@@ -23,6 +29,9 @@ function onSignIn(googleUser) {
     };
     console.log(user_student);
 
+    // Set username
+    document.getElementById("usnam").innerText = user_student.name;
+
     const socket = io("/");
     const videoGrid = document.getElementById("video-grid");
     const peers = {};
@@ -40,7 +49,7 @@ function onSignIn(googleUser) {
       })
       .then((stream) => {
         addVideoStream(myVideo, stream);
-        
+
         myPeer.on("call", (call) => {
           call.answer(stream);
           const video = document.createElement("video");
@@ -101,4 +110,9 @@ function signOut() {
       console.log("Sign Out");
       window.location.replace("/logout");
     });
+}
+
+//Create new room meeting
+function creatRoom() {
+  window.location.replace("/room/");
 }
