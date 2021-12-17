@@ -39,18 +39,26 @@ function onSignIn(googleUser) {
     const myVideo = document.createElement("video");
     myVideo.muted = true;
 
+    var currentPeer;
+    var myStream;
+    var initiateBtn = document.getElementById('initiateBtn');
+    var stopBtn = document.getElementById('stopBtn');
+
     navigator.mediaDevices
       .getUserMedia({
         video: true,
         audio: false,
       })
       .then((stream) => {
+        myStream = stream;
         addVideoStream(myVideo, stream);
         
         myPeer.on("call", (call) => {
           call.answer(stream);
           const video = document.createElement("video");
           call.on("stream", (userVideoStream) => {
+            currentPeer = call.peerConnection;
+            console.log('ccpeer: ', currentPeer);
             addVideoStream(video, userVideoStream);
           });
         });
@@ -87,6 +95,7 @@ function onSignIn(googleUser) {
       const call = myPeer.call(userId, stream);
       const video = document.createElement("video");
       call.on("stream", (userVideoStream) => {
+        currentPeer = call.peerConnection;
         addVideoStream(video, userVideoStream);
       });
       call.on("close", () => {
@@ -95,6 +104,47 @@ function onSignIn(googleUser) {
 
       peers[userId] = call;
     }
+
+    initiateBtn.onclick = (e) => {
+      navigator.mediaDevices.getDisplayMedia({
+        video: {
+          cursor: 'always'
+        },
+        audio: {
+          echoCancellation: true,
+          noiseSuppression: true
+        }
+      }).then((stream) => {
+        let vidtrack = stream.getVideoTracks()[0];
+        vidtrack.onended = function() {
+          stopShare();
+        };
+        let sender = currentPeer.getSenders().find(function(s) {
+          return s.track.kind == vidtrack.kind;
+        })
+        sender.replaceTrack(vidtrack);
+
+        // var video = document.querySelector('video');
+        // if ('srcObject' in video) {
+        //   video.srcObject = stream;
+        // } else {
+        //   video.src = window.URL.createObjectURL(stream); // for older browsers
+        // }
+        // video.play();
+      }).catch((err) => {
+        console.log('Get display media got Error: ', err);
+      })
+      // stopBtn.style.display = 'block';
+    }
+
+    function stopShare() {
+      let vidtrack = myStream.getVideoTracks()[0];
+      let sender = currentPeer.getSenders().find(function(s) {
+        return s.track.kind == vidtrack.kind;
+      })
+      sender.replaceTrack(vidtrack);
+    }
+
   }
 }
 
