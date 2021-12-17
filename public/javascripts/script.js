@@ -20,14 +20,14 @@ function onSignIn(googleUser) {
     });
   }
   if (window.location.pathname != "/login") {
-    // var profile = googleUser.getBasicProfile();
-    // console.log("test");
-    // var user_student = {
-    //   id_gg: profile.getId(),
-    //   name: profile.getName(),
-    //   email: profile.getEmail(),
-    // };
-    // console.log(user_student);
+    var profile = googleUser.getBasicProfile();
+    console.log("test");
+    var user_student = {
+      id_gg: profile.getId(),
+      name: profile.getName(),
+      email: profile.getEmail(),
+    };
+    console.log(user_student);
 
     // Set username
     document.getElementById("usnam").innerText = user_student.name;
