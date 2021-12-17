@@ -91,11 +91,6 @@ function onSignIn(googleUser) {
             initiateBtn.style.display = "block";
             addVideoStream(video, userVideoStream);
           });
-          call.on("close", () => {
-            video.remove();
-          });
-
-          
           const p_name = document.createElement("P");
           p_name.setAttribute("id", "name" + call.peer);
           p_name.innerText = list_username[call.peer]
@@ -131,7 +126,6 @@ function onSignIn(googleUser) {
     myPeer.on("open", (id) => {
       socket.emit("join-room", ROOM_ID, id, user_student.name); 
       socket.on("list-name", (list_name) => {
-
         list_username = list_name
         console.log(list_username);
       });        
