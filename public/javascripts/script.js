@@ -75,18 +75,19 @@ function onSignIn(googleUser) {
       port: 443,
     });
     const myVideo = document.createElement("video");
-    myVideo.muted = true;
-
     var currentPeer;
     var myStream;
     var myShareScreen;
     var initiateBtn = document.getElementById("initiateBtn");
     var stopBtn = document.getElementById("stopBtn");
+    var muteBtn = document.getElementById("muteBtn");
+    var camBtn = document.getElementById("camBtn");
 
+    myVideo.muted = true;
     navigator.mediaDevices
       .getUserMedia({
         video: true,
-        audio: false,
+        audio: true,
       })
       .then((stream) => {
         myStream = stream;
@@ -95,15 +96,27 @@ function onSignIn(googleUser) {
         myPeer.on("call", (call) => {
           call.answer(stream);
           const video = document.createElement("video");
-          call.on("stream", (userVideoStream) => {
-            currentPeer = call.peerConnection;
-            initiateBtn.style.display = "block";
-            addVideoStream(video, userVideoStream);
-          });
+          video.className = "remote-video";
+
           const p_name = document.createElement("P");
           p_name.setAttribute("id", "name" + call.peer);
           p_name.innerText = list_username[call.peer];
-          nameGrid.append(p_name);
+          p_name.setAttribute("style", "text-align: center");
+          // nameGrid.append(p_name);
+          // peers[call.peer] = call;
+          // console.log(call.peer);
+
+          call.on("stream", (userVideoStream) => {
+            currentPeer = call.peerConnection;
+            initiateBtn.style.display = "block";
+            console.log("event 1");
+            addVideoStream(video, userVideoStream, p_name);
+          });
+
+          call.on("close", () => {
+            video.remove();
+          });
+
           peers[call.peer] = call;
           console.log(call.peer);
         });
@@ -112,8 +125,9 @@ function onSignIn(googleUser) {
           const p_name = document.createElement("P");
           p_name.setAttribute("id", "name" + userId);
           p_name.innerText = list_username[userId];
-          nameGrid.append(p_name);
-          connecttoNewUser(userId, stream);
+          p_name.setAttribute("style", "text-align: center");
+          // nameGrid.append(p_name);
+          connecttoNewUser(userId, stream, p_name);
           console.log("User connected " + userId, name);
         });
       });
@@ -144,21 +158,55 @@ function onSignIn(googleUser) {
       myVideoGrid.append(video);
     }
 
-    function addVideoStream(video, stream) {
+    function addVideoStream(video, stream, p_name) {
       video.srcObject = stream;
       video.addEventListener("loadedmetadata", () => {
         video.play();
       });
-      videoGrid.append(video);
+      console.log(video);
+
+      // let controlDiv = document.createElement("div");
+      // controlDiv.className = "remote-video-controls";
+      // controlDiv.innerHTML = `<i class="fa fa-microphone text-white pr-3 mute-remote-mic" title="Mute"></i>
+      //           <i class="fa fa-expand text-white expand-remote-video" title="Expand"></i>`;
+
+      // // //create a new div for card
+      // // let cardDiv = document.createElement("div");
+      // // cardDiv.className = "card card-sm";
+      // // cardDiv.appendChild(video);
+      // // cardDiv.appendChild(controlDiv);
+      // // console.log(cardDiv);
+
+      // videoGrid.append(video, controlDiv);
+
+      //video controls elements
+      let controlDiv = document.createElement("div");
+      controlDiv.className = "remote-video-controls";
+      controlDiv.innerHTML = `<i class="fa fa-microphone text-white pr-3 mute-remote-mic" title="Mute"></i>
+                        <i class="fa fa-expand text-white expand-remote-video" title="Expand"></i>`;
+
+      //create a new div for card
+      let cardDiv = document.createElement("div");
+      cardDiv.className = "card card-sm";
+      // cardDiv.id = partnerName;
+      cardDiv.appendChild(video);
+      cardDiv.appendChild(controlDiv);
+      cardDiv.appendChild(p_name);
+
+      //put div in main-section elem
+      document.getElementById("videos").appendChild(cardDiv);
     }
 
-    function connecttoNewUser(userId, stream) {
+    function connecttoNewUser(userId, stream, p_name) {
       const call = myPeer.call(userId, stream);
       const video = document.createElement("video");
+      video.className = "remote-video";
+      console.log("event 2");
+      console.log(call);
       call.on("stream", (userVideoStream) => {
         currentPeer = call.peerConnection;
         initiateBtn.style.display = "block";
-        addVideoStream(video, userVideoStream);
+        addVideoStream(video, userVideoStream, p_name);
       });
       call.on("close", () => {
         video.remove();
@@ -201,6 +249,7 @@ function onSignIn(googleUser) {
             // video.play();
 
             stopBtn.style.display = "block";
+            initiateBtn.style.display = "none";
           })
           .catch((err) => {
             console.log("Get display media got Error: ", err);
@@ -220,7 +269,28 @@ function onSignIn(googleUser) {
       });
       sender.replaceTrack(vidtrack);
       stopBtn.style.display = "none";
+      initiateBtn.style.display = "block";
     }
+
+    //When the mute btn is clicked
+
+    muteBtn.onclick = () => {
+      console.log("clicked mute");
+      if (myStream.getAudioTracks()[0].enabled) {
+        myStream.getAudioTracks()[0].enabled = false;
+      } else {
+        myStream.getAudioTracks()[0].enabled = true;
+      }
+    };
+
+    camBtn.onclick = () => {
+      console.log("clicked cambtn");
+      if (myStream.getVideoTracks()[0].enabled) {
+        myStream.getVideoTracks()[0].enabled = false;
+      } else {
+        myStream.getVideoTracks()[0].enabled = true;
+      }
+    };
   }
 }
 
@@ -239,3 +309,4 @@ function signOut() {
 function creatRoom() {
   window.location.replace("/room/");
 }
+
