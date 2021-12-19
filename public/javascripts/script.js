@@ -100,15 +100,6 @@ function onSignIn(googleUser) {
           const video = document.createElement("video");
           video.className = "remote-video";
 
-          // const p_name = document.createElement("P");
-          // p_name.setAttribute("id", call.peer);
-          // p_name.innerText = list_username[call.peer];
-          // p_name.setAttribute("style", "text-align: center; color: white");
-
-          // nameGrid.append(p_name);
-          // peers[call.peer] = call;
-          // console.log(call.peer);
-
           call.on("stream", (userVideoStream) => {
             currentPeer = call.peerConnection;
             initiateBtn.style.display = "block";
@@ -125,12 +116,6 @@ function onSignIn(googleUser) {
         });
 
         socket.on("user-connected", (userId, name) => {
-          // const p_name = document.createElement("P");
-          // p_name.setAttribute("id", userId);
-          // p_name.innerText = list_username[userId];
-          // p_name.setAttribute("style", "text-align: center; color: white");
-
-          // nameGrid.append(p_name);
           connecttoNewUser(userId, stream, userId);
           console.log("User connected " + userId, name);
         });
@@ -143,7 +128,6 @@ function onSignIn(googleUser) {
         console.log("close real");
       }
       initiateBtn.style.display = "none";
-      //alert('User disconnected: ', userId);
       console.log("User disconnected: ", userId);
     });
 
@@ -170,20 +154,6 @@ function onSignIn(googleUser) {
       console.log(video);
       video.setAttribute("id", id);
 
-      // let controlDiv = document.createElement("div");
-      // controlDiv.className = "remote-video-controls";
-      // controlDiv.innerHTML = `<i class="fa fa-microphone text-white pr-3 mute-remote-mic" title="Mute"></i>
-      //           <i class="fa fa-expand text-white expand-remote-video" title="Expand"></i>`;
-
-      // // //create a new div for card
-      // // let cardDiv = document.createElement("div");
-      // // cardDiv.className = "card card-sm";
-      // // cardDiv.appendChild(video);
-      // // cardDiv.appendChild(controlDiv);
-      // // console.log(cardDiv);
-
-      // videoGrid.append(video, controlDiv);
-
       const p_name = document.createElement("P");
       p_name.setAttribute("id", "id" + id);
       p_name.innerText = list_username[id];
@@ -206,10 +176,7 @@ function onSignIn(googleUser) {
       //video controls elements
       let controlDiv = document.createElement("div");
       controlDiv.className = "remote-video-controls";
-      // controlDiv.innerHTML = `<i class="fa fa-microphone text-white pr-3 mute-remote-mic" title="Mute"></i>
-      //                   <i class="fa fa-expand text-white expand-remote-video" title="Expand"></i>`;
 
-      //create a new div for card
       let cardDiv = document.createElement("div");
       cardDiv.className = "card card-sm";
       cardDiv.id = "card" + id;
@@ -265,14 +232,6 @@ function onSignIn(googleUser) {
               return s.track.kind == vidtrack.kind;
             });
             sender.replaceTrack(vidtrack);
-
-            // var video = document.querySelector('video');
-            // if ('srcObject' in video) {
-            //   video.srcObject = stream;
-            // } else {
-            //   video.src = window.URL.createObjectURL(stream); // for older browsers
-            // }
-            // video.play();
 
             stopBtn.style.display = "block";
             initiateBtn.style.display = "none";
