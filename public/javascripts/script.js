@@ -111,6 +111,7 @@ function onSignIn(googleUser) {
 
           call.on("stream", (userVideoStream) => {
             currentPeer = call.peerConnection;
+            console.log(stream)
             initiateBtn.style.display = "block";
             console.log("event 1");
             addVideoStream(video, userVideoStream, call.peer);
@@ -262,10 +263,11 @@ function onSignIn(googleUser) {
               stopShare();
             };
             let sender = currentPeer.getSenders().find(function (s) {
-              return s.track.kind == vidtrack.kind;
+              return s.track.kind == vidtrack.kind; 
             });
             sender.replaceTrack(vidtrack);
-
+            myVideoGrid.querySelector('video').srcObject = myShareScreen;
+            
             // var video = document.querySelector('video');
             // if ('srcObject' in video) {
             //   video.srcObject = stream;
@@ -294,6 +296,7 @@ function onSignIn(googleUser) {
         return s.track.kind == vidtrack.kind;
       });
       sender.replaceTrack(vidtrack);
+      myVideoGrid.querySelector('video').srcObject = myStream;
       stopBtn.style.display = "none";
       initiateBtn.style.display = "block";
     }
