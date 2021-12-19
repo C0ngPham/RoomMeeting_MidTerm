@@ -1,3 +1,5 @@
+// const { create } = require("hbs");
+
 window.onload = function () {
   gapi.load("auth2", function () {
     gapi.auth2.init();
@@ -98,10 +100,11 @@ function onSignIn(googleUser) {
           const video = document.createElement("video");
           video.className = "remote-video";
 
-          const p_name = document.createElement("P");
-          p_name.setAttribute("id", "name" + call.peer);
-          p_name.innerText = list_username[call.peer];
-          p_name.setAttribute("style", "text-align: center");
+          // const p_name = document.createElement("P");
+          // p_name.setAttribute("id", call.peer);
+          // p_name.innerText = list_username[call.peer];
+          // p_name.setAttribute("style", "text-align: center; color: white");
+
           // nameGrid.append(p_name);
           // peers[call.peer] = call;
           // console.log(call.peer);
@@ -110,7 +113,7 @@ function onSignIn(googleUser) {
             currentPeer = call.peerConnection;
             initiateBtn.style.display = "block";
             console.log("event 1");
-            addVideoStream(video, userVideoStream, p_name);
+            addVideoStream(video, userVideoStream, call.peer);
           });
 
           call.on("close", () => {
@@ -122,12 +125,13 @@ function onSignIn(googleUser) {
         });
 
         socket.on("user-connected", (userId, name) => {
-          const p_name = document.createElement("P");
-          p_name.setAttribute("id", "name" + userId);
-          p_name.innerText = list_username[userId];
-          p_name.setAttribute("style", "text-align: center");
+          // const p_name = document.createElement("P");
+          // p_name.setAttribute("id", userId);
+          // p_name.innerText = list_username[userId];
+          // p_name.setAttribute("style", "text-align: center; color: white");
+
           // nameGrid.append(p_name);
-          connecttoNewUser(userId, stream, p_name);
+          connecttoNewUser(userId, stream, userId);
           console.log("User connected " + userId, name);
         });
       });
@@ -158,12 +162,13 @@ function onSignIn(googleUser) {
       myVideoGrid.append(video);
     }
 
-    function addVideoStream(video, stream, p_name) {
+    function addVideoStream(video, stream, id) {
       video.srcObject = stream;
       video.addEventListener("loadedmetadata", () => {
         video.play();
       });
       console.log(video);
+      video.setAttribute("id", id);
 
       // let controlDiv = document.createElement("div");
       // controlDiv.className = "remote-video-controls";
@@ -179,25 +184,46 @@ function onSignIn(googleUser) {
 
       // videoGrid.append(video, controlDiv);
 
+      const p_name = document.createElement("P");
+      p_name.setAttribute("id", "id" + id);
+      p_name.innerText = list_username[id];
+      p_name.setAttribute("style", "text-align: center; color: white");
+
+      // btnMute
+      const btnMuteGuess = document.createElement("button");
+      btnMuteGuess.className = "btn btn-outline-warning";
+      btnMuteGuess.id = "btn" + id;
+      btnMuteGuess.innerText = "Mute/Unmute";
+      btnMuteGuess.setAttribute("onClick", "muteGuess(this.id)");
+      // Btn expand
+
+      const btnExpGuess = document.createElement("button");
+      btnExpGuess.className = "btn btn-outline-info";
+      btnExpGuess.id = "exp" + id;
+      btnExpGuess.innerText = "Expand";
+      btnExpGuess.setAttribute("onClick", "expGuess(this.id)");
+
       //video controls elements
       let controlDiv = document.createElement("div");
       controlDiv.className = "remote-video-controls";
-      controlDiv.innerHTML = `<i class="fa fa-microphone text-white pr-3 mute-remote-mic" title="Mute"></i>
-                        <i class="fa fa-expand text-white expand-remote-video" title="Expand"></i>`;
+      // controlDiv.innerHTML = `<i class="fa fa-microphone text-white pr-3 mute-remote-mic" title="Mute"></i>
+      //                   <i class="fa fa-expand text-white expand-remote-video" title="Expand"></i>`;
 
       //create a new div for card
       let cardDiv = document.createElement("div");
       cardDiv.className = "card card-sm";
-      // cardDiv.id = partnerName;
+      cardDiv.id = "card" + id;
       cardDiv.appendChild(video);
+      controlDiv.appendChild(p_name);
+      controlDiv.appendChild(btnMuteGuess);
+      controlDiv.appendChild(btnExpGuess);
       cardDiv.appendChild(controlDiv);
-      cardDiv.appendChild(p_name);
 
       //put div in main-section elem
       document.getElementById("videos").appendChild(cardDiv);
     }
 
-    function connecttoNewUser(userId, stream, p_name) {
+    function connecttoNewUser(userId, stream, userId) {
       const call = myPeer.call(userId, stream);
       const video = document.createElement("video");
       video.className = "remote-video";
@@ -206,7 +232,7 @@ function onSignIn(googleUser) {
       call.on("stream", (userVideoStream) => {
         currentPeer = call.peerConnection;
         initiateBtn.style.display = "block";
-        addVideoStream(video, userVideoStream, p_name);
+        addVideoStream(video, userVideoStream, userId);
       });
       call.on("close", () => {
         video.remove();
@@ -294,6 +320,38 @@ function onSignIn(googleUser) {
   }
 }
 
+// When guess btn is clicked
+function muteGuess(id) {
+  console.log("mute guess: ", id);
+  let guessStream = document.getElementById(id.substring(3));
+
+  // console.log(guessStream.videoWidth);
+  // console.log(guessStream.videoHeight);
+  console.log(guessStream.muted);
+  if (guessStream.muted) {
+    guessStream.muted = false;
+    console.log(guessStream.muted);
+  } else {
+    guessStream.muted = true;
+    console.log(guessStream.muted);
+  }
+}
+
+// When exp btn is clicked
+function expGuess(id) {
+  console.log("expand guess: ", id);
+  let guessStream = document.getElementById(id.substring(3));
+
+  if (guessStream.requestFullscreen) {
+    guessStream.requestFullscreen();
+  } else if (guessStream.webkitRequestFullscreen) {
+    /* Safari */
+    guessStream.webkitRequestFullscreen();
+  } else if (guessStream.msRequestFullscreen) {
+    /* IE11 */
+    guessStream.msRequestFullscreen();
+  }
+}
 //Google signOut
 function signOut() {
   gapi.auth2
@@ -309,4 +367,3 @@ function signOut() {
 function creatRoom() {
   window.location.replace("/room/");
 }
-

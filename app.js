@@ -51,15 +51,14 @@ app.use(function(err, req, res, next) {
 var list_name = {};
 io.on("connection", (socket) => {
   socket.on("join-room", (roomId, userId, name) => {
-
-    list_name[userId] = name
+    list_name[userId] = name;
     console.log(list_name);
 
     socket.join(roomId);
     io.emit("list-name", list_name);
 
     socket.to(roomId).emit("user-connected", userId, name);
-    
+
     socket.on("disconnect", () => {
       socket.to(roomId).emit("user-disconnected", userId);
       delete list_name[userId];
