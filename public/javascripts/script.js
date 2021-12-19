@@ -102,6 +102,7 @@ function onSignIn(googleUser) {
 
           call.on("stream", (userVideoStream) => {
             currentPeer = call.peerConnection;
+            console.log(stream);
             initiateBtn.style.display = "block";
             console.log("event 1");
             addVideoStream(video, userVideoStream, call.peer);
@@ -232,6 +233,15 @@ function onSignIn(googleUser) {
               return s.track.kind == vidtrack.kind;
             });
             sender.replaceTrack(vidtrack);
+            myVideoGrid.querySelector("video").srcObject = myShareScreen;
+
+            // var video = document.querySelector('video');
+            // if ('srcObject' in video) {
+            //   video.srcObject = stream;
+            // } else {
+            //   video.src = window.URL.createObjectURL(stream); // for older browsers
+            // }
+            // video.play();
 
             stopBtn.style.display = "block";
             initiateBtn.style.display = "none";
@@ -253,6 +263,7 @@ function onSignIn(googleUser) {
         return s.track.kind == vidtrack.kind;
       });
       sender.replaceTrack(vidtrack);
+      myVideoGrid.querySelector("video").srcObject = myStream;
       stopBtn.style.display = "none";
       initiateBtn.style.display = "block";
     }
